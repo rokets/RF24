@@ -6,9 +6,9 @@
  version 2 as published by the Free Software Foundation.
  */
 
-#include "nRF24L01.h"
-#include "RF24_config.h"
-#include "RF24.h"
+#include "DUEnRF24L01.h"
+#include "DUERF24_config.h"
+#include "DUERF24.h"
 
 /****************************************************************************/
 
@@ -21,7 +21,11 @@ void RF24::csn(int mode)
 #ifdef ARDUINO
   SPI.setBitOrder(MSBFIRST);
   SPI.setDataMode(SPI_MODE0);
+  #ifdef __arm__ // Shouldn't need to set the clock divider on DUE
+  SPI.setClockDivider(21);
+  #else
   SPI.setClockDivider(SPI_CLOCK_DIV4);
+  #endif
 #endif
   digitalWrite(csn_pin,mode);
 }
@@ -297,8 +301,8 @@ static const char * const rf24_crclength_e_str_P[] PROGMEM = {
 };
 static const char rf24_pa_dbm_e_str_0[] PROGMEM = "PA_MIN";
 static const char rf24_pa_dbm_e_str_1[] PROGMEM = "PA_LOW";
-static const char rf24_pa_dbm_e_str_2[] PROGMEM = "LA_MED";
-static const char rf24_pa_dbm_e_str_3[] PROGMEM = "PA_HIGH";
+static const char rf24_pa_dbm_e_str_2[] PROGMEM = "PA_HIGH";
+static const char rf24_pa_dbm_e_str_3[] PROGMEM = "PA_MAX";
 static const char * const rf24_pa_dbm_e_str_P[] PROGMEM = { 
   rf24_pa_dbm_e_str_0,
   rf24_pa_dbm_e_str_1,
