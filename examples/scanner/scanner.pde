@@ -18,8 +18,8 @@
  */
 
 #include <SPI.h>
-#include "nRF24L01.h"
-#include "RF24.h"
+#include "DUEnRF24L01.h"
+#include "DUERF24.h"
 #include "printf.h"
 
 //
@@ -47,7 +47,7 @@ void setup(void)
   // Print preamble
   //
 
-  Serial.begin(57600);
+  Serial.begin(115200);
   printf_begin();
   printf("\n\rRF24/examples/scanner/\n\r");
 

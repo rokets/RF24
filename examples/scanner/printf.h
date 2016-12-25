@@ -25,7 +25,9 @@ int serial_putc( char c, FILE * )
 
 void printf_begin(void)
 {
+#if !defined(__arm__)
   fdevopen( &serial_putc, 0 );
+#endif
 }
 
 #endif // __PRINTF_H__

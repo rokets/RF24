@@ -26,6 +26,9 @@
 #include <stdio.h>
 #include <string.h>
 extern HardwareSPI SPI;
+#endif
+// Define _BV for non-Arduino platforms and for Arduino DUE
+#if ! defined(ARDUINO) || (defined(ARDUINO) && defined(__arm__))
 #define _BV(x) (1<<(x))
 #endif
 
@@ -37,8 +40,9 @@ extern HardwareSPI SPI;
 #endif
 
 // Avoid spurious warnings
+// Arduino DUE is arm and uses traditional PROGMEM constructs
 #if 1
-#if ! defined( NATIVE ) && defined( ARDUINO )
+#if ! defined( NATIVE ) && defined( ARDUINO ) && ! defined(__arm__)
 #undef PROGMEM
 #define PROGMEM __attribute__(( section(".progmem.data") ))
 #undef PSTR
@@ -47,11 +51,16 @@ extern HardwareSPI SPI;
 #endif
 
 // Progmem is Arduino-specific
-#ifdef ARDUINO
+// Arduino DUE is arm and does not include avr/pgmspace
+#if defined(ARDUINO) && ! defined(__arm__)
 #include <avr/pgmspace.h>
 #define PRIPSTR "%S"
 #else
+#if ! defined(ARDUINO) // This doesn't work on Arduino DUE
 typedef char const char;
+#else // Fill in pgm_read_byte that is used, but missing from DUE
+#define pgm_read_byte(addr) (*(const unsigned char *)(addr))
+#endif
 typedef uint16_t prog_uint16_t;
 #define PSTR(x) (x)
 #define printf_P printf
